@@ -67,6 +67,13 @@ namespace pm.Helpers
             return $@"{ baseDirectory }\Templates\";
         }
 
+        public string GetExtentionPath()
+        {
+            var baseDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            return $@"{ baseDirectory }\Extentions\";
+        }
+
         public SettingsModel ReadSettings(string rootPath)
         {
             var jsonString = File.ReadAllText($@"{rootPath}\settings.pm.json");

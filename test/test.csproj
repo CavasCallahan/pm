@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\pm\pm.csproj" />
+    <ProjectReference Include="..\library\pm.csproj" />
     <ProjectReference Include="..\cli\ProjectManager.csproj" />
   </ItemGroup>
 

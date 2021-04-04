@@ -1,6 +1,8 @@
 .vscode/
+.vs/
 */bin/
 */obj/
 */build/
+cli/Extentions/*
 
 */appsettings.json*

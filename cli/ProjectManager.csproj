@@ -14,11 +14,14 @@
     <Content Include="Templates\*\*.*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>  
+    <Content Include="Extentions\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>  
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="Mono.Options" Version="6.6.0.161" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\pm\pm.csproj" />
+    <ProjectReference Include="..\library\pm.csproj" />
   </ItemGroup>
 
 </Project>
