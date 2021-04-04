@@ -3,5 +3,6 @@
 */bin/
 */obj/
 */build/
+cli/Extentions/*
 
 */appsettings.json*
