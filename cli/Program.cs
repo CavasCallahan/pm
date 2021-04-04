@@ -3,8 +3,8 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using pm;
 using ProjectManager.Commands;
+using ProjectManager.Helpers;
 using System.Diagnostics;
 using Microsoft.VisualBasic;
 using pm.Helpers;
@@ -25,6 +25,7 @@ namespace ProjectManager
                 services.AddTransient<StartService>();
                 services.AddTransient<ProjectHandler>();
                 services.AddSingleton<SettingsHandler>();
+                services.AddSingleton<ExtentionHelper>();
 
                 //Commands
                 services.AddTransient<Create>();
@@ -34,6 +35,7 @@ namespace ProjectManager
                 services.AddTransient<Remove>();
                 services.AddTransient<Run>();
                 services.AddTransient<Settings>();
+                services.AddTransient<Execute>();
             })
             .Build();
             

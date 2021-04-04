@@ -7,7 +7,7 @@ namespace ProjectManager
     public class StartService
     {
         public StartService(Create create, Init init, Open open, Editor editor, Remove remove, Run runCommand, SettingsHandler handler,
-        Settings settings)
+        Settings settings, Execute execute)
         {
             Create = create;
             Init = init;
@@ -17,6 +17,7 @@ namespace ProjectManager
             RunCommand = runCommand;
             Handler = handler;
             Settings = settings;
+            Execute = execute;
         }
 
         public Create Create { get; }
@@ -27,11 +28,10 @@ namespace ProjectManager
         public Run RunCommand { get; }
         public SettingsHandler Handler { get; }
         public Settings Settings { get; }
-
+        public Execute Execute { get; }
         public void Run(string[] args, string root)
         {
             Handler.Location = root;
-
             //Commands to run
             var commands = new CommandSet("commands"){
                 Create,
@@ -40,7 +40,8 @@ namespace ProjectManager
                 Editor,
                 Remove,
                 RunCommand,
-                Settings
+                Settings,
+                Execute
             };
 
             try {
