@@ -16,6 +16,7 @@
     -Run => run's any command created in settings.pm.json.
     -Settings => opens the appsettings of pm in your current editor for add a new 
     editor or change or project's folder.
+    -Execute => Executes the extentions of pm that you can create too.
 # Templates: 
     -Simple => Create's a folder and the settings.pm.json file.
     -Python => Create's a simple Get Started in python
