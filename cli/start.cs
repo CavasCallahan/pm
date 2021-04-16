@@ -38,7 +38,7 @@ namespace ProjectManager
             Handler.Location = root;
 
             //Fix's the directory hidden
-            if (!File.Exists(Handler.PathToPmDirectory))
+            if (!File.Exists(Handler.PathToPmDirectory) && !File.Exists(Handler.PathToPmDirectory + "/redirect.json"))
             {
                 var pmDir = new DirectoryInfo(Handler.PathToPmDirectory);
                 pmDir.Create();

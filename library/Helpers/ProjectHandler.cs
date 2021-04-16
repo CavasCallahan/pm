@@ -11,9 +11,10 @@ namespace pm.Helpers
 {
     public enum ProjectType{
         Csharp,
-        python,
-        java,
-        Simple
+        Python,
+        Java,
+        Simple,
+        Command
     }
 
     public class ProjectHandler
@@ -38,7 +39,7 @@ namespace pm.Helpers
                 case ProjectType.Csharp:
                     CreateTemplate("CSharp", projectPath);
                 break;
-                case ProjectType.python:
+                case ProjectType.Python:
                     CreateTemplate("Python", projectPath);
                 break;
                 case ProjectType.Simple:

@@ -28,6 +28,7 @@ namespace ProjectManager
                 services.AddTransient<ProjectHandler>();
                 services.AddSingleton<SettingsHandler>();
                 services.AddSingleton<ExtentionHelper>();
+                
                 //Commands
                 services.AddTransient<Create>();
                 services.AddTransient<Init>();
