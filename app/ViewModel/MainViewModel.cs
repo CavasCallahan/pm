@@ -1,39 +1,37 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using app.library;
 using app.library.Model;
+using app.Store;
 
 namespace app.ViewModel
 {
     public class MainViewModel : ObservableObject
     {
-        private List<ProjectModel> listProjects = new List<ProjectModel>();
+        private object currentView;
 
-        public RelayCommand ItemSelectCommand { get; set; }
-
-        private ProjectManager pm { get; set; } = new ProjectManager();
-
-        public List<ProjectModel> ListProjects
+        public object CurrentView
         {
-            get { return listProjects; }
+            get { return Store.CurrentView; }
             set 
             { 
-                listProjects = value;
+                currentView = value;
                 OnPropertyChanged();
             }
         }
 
-        private void InitializeProject()
+        public NavigationStore Store { get; }
+
+        public MainViewModel(NavigationStore store)
         {
-            
+            Store = store;
+
+            Store.CurrentViewModelChange += OnCurrentViewModelChange;
         }
 
-        public MainViewModel()
+        private void OnCurrentViewModelChange()
         {
-            listProjects = pm.GetProjects<ProjectModel>();
-
-            ItemSelectCommand = new RelayCommand(o => {
-                System.Console.WriteLine("Hello World!");
-            } );
+            OnPropertyChanged(nameof(CurrentView));
         }
     }
 }

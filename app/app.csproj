@@ -8,11 +8,23 @@
 
   <ItemGroup>
     <Folder Include="Fonts\" />
-    <Folder Include="View\" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\app.library\app.library.csproj" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.31" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <Resource Include="Fonts\Comfortaa-Bold.ttf" />
+	  <Resource Include="Fonts\Comfortaa-Light.ttf" />
+	  <Resource Include="Fonts\Comfortaa-Medium.ttf" />
+	  <Resource Include="Fonts\Comfortaa-Regular.ttf" />
+	  <Resource Include="Fonts\Poppins-Black.ttf" />
+	  <Resource Include="Fonts\Poppins-Bold.ttf" />
+	  <Resource Include="Fonts\Poppins-Medium.ttf" />
+	  <Resource Include="Fonts\Poppins-Regular.ttf" />
+	  <Resource Include="Fonts\Poppins-SemiBold.ttf" />
+	  <ProjectReference Include="..\app.library\app.library.csproj" />
   </ItemGroup>
 
 </Project>

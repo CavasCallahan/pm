@@ -1,4 +1,7 @@
-﻿using System;
+﻿using app.Store;
+using app.View;
+using app.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +16,20 @@ namespace app
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            NavigationStore navigation = new NavigationStore();
+
+            navigation.CurrentView = new HomeView(navigation);
+
+            MainWindow = new MainWindow()
+            {
+                DataContext = new MainViewModel(navigation)
+            };
+
+            MainWindow.Show();
+
+            base.OnStartup(e);
+        }
     }
 }

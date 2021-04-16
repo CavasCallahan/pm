@@ -13,28 +13,21 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace app
+namespace app.View
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for DescriptionView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class DescriptionView : UserControl
     {
-        public MainWindow()
+        public DescriptionView()
         {
             InitializeComponent();
         }
 
-        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            this.DragMove();
-        }
 
-        private void ListView_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            ScrollViewer scv = (ScrollViewer)sender;
-            scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
-            e.Handled = true;
         }
     }
 }
