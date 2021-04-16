@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
-    <AssemblyName>pmn</AssemblyName>
+    <AssemblyName>pmp</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,6 +22,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\library\pm.csproj" />
+    <ProjectReference Include="..\plugin\plugin.csproj" />
   </ItemGroup>
 
 </Project>

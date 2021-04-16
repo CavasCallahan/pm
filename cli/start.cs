@@ -1,6 +1,10 @@
 using Mono.Options;
 using ProjectManager.Commands;
 using pm.Helpers;
+using pm.Models;
+using System.IO;
+using System.Text.Json;
+using System.Collections.Generic;
 
 namespace ProjectManager
 {
@@ -32,6 +36,28 @@ namespace ProjectManager
         public void Run(string[] args, string root)
         {
             Handler.Location = root;
+
+            //Fix's the directory hidden
+            if (!File.Exists(Handler.PathToPmDirectory) && !File.Exists(Handler.PathToPmDirectory + "/redirect.json"))
+            {
+                var pmDir = new DirectoryInfo(Handler.PathToPmDirectory);
+                pmDir.Create();
+
+                var list = new List<string>();
+                list.Add(@"C:\Example\AnotherFolder\Project-Name");
+
+                var example = new RedirectModel{
+                    Redirect = list
+                };
+                
+                var options = new JsonSerializerOptions{
+                    WriteIndented = true
+                };
+
+                var jsonString = JsonSerializer.Serialize<RedirectModel>(example, options);
+                File.WriteAllText($"{ Handler.PathToPmDirectory }\\redirect.json",jsonString);
+            }
+
             //Commands to run
             var commands = new CommandSet("commands"){
                 Create,
@@ -45,10 +71,11 @@ namespace ProjectManager
             };
 
             try {
+
                 //Runs the commands
                 commands.Run(args);
-            } catch (System.Exception) {
-                return;
+            } catch (System.Exception e) {
+                new MessagesHandler(e.Message, MessageType.Error);
             }
         }
     }

@@ -5,14 +5,16 @@ using System.Reflection;
 using System.Text.Json;
 using pm.Models;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 
 namespace pm.Helpers
 {
     public enum ProjectType{
         Csharp,
-        python,
-        java,
-        Simple
+        Python,
+        Java,
+        Simple,
+        Command
     }
 
     public class ProjectHandler
@@ -25,7 +27,7 @@ namespace pm.Helpers
         public string TemplatePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"Template");
 
         public IConfiguration Configuration { get; }
-        public SettingsHandler Settings { get; }
+        private SettingsHandler Settings { get; }
 
         //Handler's Of Commands
 
@@ -37,7 +39,7 @@ namespace pm.Helpers
                 case ProjectType.Csharp:
                     CreateTemplate("CSharp", projectPath);
                 break;
-                case ProjectType.python:
+                case ProjectType.Python:
                     CreateTemplate("Python", projectPath);
                 break;
                 case ProjectType.Simple:
@@ -88,12 +90,47 @@ namespace pm.Helpers
 
         public void InitializeProject(string projectPath, string projectName)
         {
+            var directoryFolder = Path.GetDirectoryName(projectPath);
+            var path = Settings.GetValue<string>("ProjectPath");
+
+            var redirectFile = $"{ Settings.PathToPmDirectory }/redirect.json";
+
             if(File.Exists($"{ projectPath }/settings.pm.json"))
             {
                 new MessagesHandler("The Project is already initialize", MessageType.Normal);
             }
             else
             {
+                if (path != $@"{directoryFolder}\")
+                {   
+                    if (File.Exists(redirectFile))
+                    {
+                        List<string> redirectList = new List<string>();
+                        var jsonString = File.ReadAllText(redirectFile);
+                        var redirectObject = JsonSerializer.Deserialize<RedirectModel>(jsonString);
+
+                        //Adds all to the list
+                        redirectObject.Redirect.ForEach(d => redirectList.Add(d));
+                        
+
+                        //Adds path of file
+                        redirectList.Add(projectPath);
+
+                        //Creates object with all built in
+                        var data = new RedirectModel{
+                            Redirect = redirectList,
+                        };
+
+                        JsonSerializerOptions options = new JsonSerializerOptions{
+                            WriteIndented = true,
+                        };
+
+                        jsonString = JsonSerializer.Serialize<RedirectModel>(data, options);
+
+                        File.WriteAllText(redirectFile, jsonString);
+                    }
+                }
+
                 using(StreamWriter setings = File.CreateText($"{ projectPath }/settings.pm.json"))
                 {
                     var settings = new SettingsModel{
@@ -164,6 +201,22 @@ namespace pm.Helpers
                         return;
                     }
                 }
+
+                var jsonString = File.ReadAllText(Path.Combine(Settings.PathToPmDirectory, "redirect.json"));
+                var redirectObject = JsonSerializer.Deserialize<RedirectModel>(jsonString);
+
+                foreach (var file in redirectObject.Redirect)
+                {
+                    var folderName = Path.GetFileName(file);
+
+                    if (folderName == projectName)
+                    {
+                        FileSystem.ChDir(file);
+                        OpenCurrentEditor();
+                        return;
+                    }
+                }
+
                 new MessagesHandler($"Pm didn't find any project with the name { projectName }", MessageType.Normal);
             }
             catch(System.Exception)

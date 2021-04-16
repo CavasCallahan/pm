@@ -14,7 +14,11 @@ namespace pm.Helpers
         }
         
         public IConfiguration Configuration { get; }
-
+        public string PathToPmDirectory
+        {
+            get { return Path.Combine(GetValue<string>("ProjectPath"), ".pm"); }
+        }
+        
         public string Location { get; set; }
 
         public void setValue(string currentEditor = null, object editorPath = null)

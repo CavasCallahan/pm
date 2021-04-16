@@ -1,0 +1,59 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style x:Key="TextBoxModern" TargetType="{x:Type TextBox}">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="FontFamily" Value="/Fonts/#Comfortaa" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBox}">
+                    <Border Background="{ TemplateBinding Background }" CornerRadius="5">
+                        <Grid>
+                            <TextBox x:Name="SearchBox" Margin="10 0" Text="{TemplateBinding Text}" Foreground="White" VerticalAlignment="Center" Background="{ TemplateBinding Background }" BorderBrush="Transparent" BorderThickness="0" />
+                            <TextBlock x:Name="PlaceHolder" Foreground="White" Text="{TemplateBinding Tag}" VerticalAlignment="Center" Margin="12 0" IsHitTestVisible="False">
+                                <TextBlock.Style>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="TextBoxModernArea" TargetType="{x:Type TextBox}">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="FontFamily" Value="/Fonts/#Comfortaa" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBox}">
+                    <Border Background="{ TemplateBinding Background }" CornerRadius="5">
+                        <Grid>
+                            <TextBox x:Name="SearchBox" Margin="12 15" Text="{TemplateBinding Text}" Foreground="White" TextWrapping="Wrap" VerticalAlignment="Top" Background="{ TemplateBinding Background }" BorderBrush="Transparent" BorderThickness="0" />
+                            <TextBlock x:Name="PlaceHolder" Foreground="White" Text="{TemplateBinding Tag}" VerticalAlignment="top" Margin="14 15" IsHitTestVisible="False">
+                                <TextBlock.Style>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

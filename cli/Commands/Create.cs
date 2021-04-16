@@ -48,7 +48,7 @@ namespace ProjectManager.Commands
                         Handler.CreateProject(projectName, ProjectType.Csharp);
                     break;
                     case "python":
-                        Handler.CreateProject(projectName, ProjectType.python);
+                        Handler.CreateProject(projectName, ProjectType.Python);
                     break;
                 }
             }

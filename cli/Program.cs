@@ -13,6 +13,8 @@ namespace ProjectManager
 {
     class Program
     {
+        public static ExtentionHelper Helper { get; set; }
+
         static void Main(string[] args)
         {
             var root = Directory.GetCurrentDirectory();
@@ -26,7 +28,7 @@ namespace ProjectManager
                 services.AddTransient<ProjectHandler>();
                 services.AddSingleton<SettingsHandler>();
                 services.AddSingleton<ExtentionHelper>();
-
+                
                 //Commands
                 services.AddTransient<Create>();
                 services.AddTransient<Init>();
