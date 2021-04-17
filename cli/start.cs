@@ -75,8 +75,9 @@ namespace ProjectManager
 
                 //Runs the commands
                 commands.Run(args);
-            } catch (System.Exception e) {
-                new MessagesHandler(e.Message, MessageType.Error);
+            } catch (System.Exception) {
+                return;
+                // new MessagesHandler(e.Message, MessageType.Information);
             }
         }
     }

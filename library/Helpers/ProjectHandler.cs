@@ -14,7 +14,8 @@ namespace pm.Helpers
         Python,
         Java,
         Simple,
-        Command
+        Command,
+        Plugin
     }
 
     public class ProjectHandler
@@ -44,6 +45,9 @@ namespace pm.Helpers
                 break;
                 case ProjectType.Simple:
                     CreateTemplate(null, projectPath);
+                break;
+                case ProjectType.Plugin:
+                    CreateTemplate("Plugin", projectPath);
                 break;
             }
         }
