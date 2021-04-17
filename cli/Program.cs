@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using Microsoft.Extensions.Hosting;
@@ -14,6 +15,8 @@ namespace ProjectManager
     class Program
     {
         public static ExtentionHelper Helper { get; set; }
+
+        public delegate IServiceProvider ServiceResolver(string key);
 
         static void Main(string[] args)
         {

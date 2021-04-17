@@ -1,5 +1,5 @@
 using Xunit;
-using ProjectManager.Commands;
+using pm.Helpers;
 
 namespace test
 {
@@ -7,13 +7,12 @@ namespace test
     {
         public CreateTest()
         {
-            
         }
 
         [Fact]
         public void ShoudCreate()
         {
-            
+
         }
     }
 }

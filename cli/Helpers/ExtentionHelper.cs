@@ -9,9 +9,12 @@ namespace ProjectManager.Helpers
     public class ExtentionHelper
     {
         public SettingsHandler Settings { get; }
-        public ExtentionHelper(SettingsHandler settings)
+        public IServiceProvider Service { get; }
+
+        public ExtentionHelper(SettingsHandler settings, IServiceProvider service)
         {
             Settings = settings;
+            Service = service;
         }
 
         public Dictionary<string, Assembly> DllList { get; private set; } = new Dictionary<string, Assembly>();
@@ -36,12 +39,12 @@ namespace ProjectManager.Helpers
             return DllList;
         }
 
-        public void ExecuteExtention(string name, Assembly extention)
+        public void ExecuteExtention(string name, Assembly extention, IEnumerable<string> args)
         {
             foreach (Type type in extention.GetExportedTypes())
             {
-                dynamic c = Activator.CreateInstance(type);
-                c.Main();
+                dynamic c = Activator.CreateInstance(type, Service, args);
+                c.Execute();
             }
         }
     }

@@ -22,12 +22,12 @@ namespace ProjectManager.Commands
                     System.Console.WriteLine ("Options:");
                     System.Console.WriteLine ("Arguments:");
                     System.Console.WriteLine();
-                    System.Console.WriteLine ("pmn execute [ExtentionName]");
+                    System.Console.WriteLine ("Pm exec [ExtentionName]");
                     System.Console.WriteLine();
                     options.WriteOptionDescriptions(System.Console.Out);
                 }else{
                     var extention = string.Join(", ", arg);
-                    RunExecute(extention);
+                    RunExecute(extention, arg);
                 }
              };
             Helper = helper;
@@ -35,7 +35,7 @@ namespace ProjectManager.Commands
 
         public ExtentionHelper Helper { get; }
 
-        private void RunExecute(string name)
+        private void RunExecute(string name, IEnumerable<string> args)
         {
             var extentions = Helper.ReadExtention();
             
@@ -43,7 +43,7 @@ namespace ProjectManager.Commands
             {
                 if (extention.Key == name)
                 {
-                    Helper.ExecuteExtention(extention.Key, extention.Value);
+                    Helper.ExecuteExtention(extention.Key, extention.Value, args);
                 }
             }
         }

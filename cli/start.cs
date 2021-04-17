@@ -13,6 +13,7 @@ namespace ProjectManager
         public StartService(Create create, Init init, Open open, Editor editor, Remove remove, Run runCommand, SettingsHandler handler,
         Settings settings, Execute execute)
         {
+            
             Create = create;
             Init = init;
             Open = open;
