@@ -1,4 +1,4 @@
-namespace pm.Helpers
+namespace pm.Builder
 {
     public interface IPlugin
     {

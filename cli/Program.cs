@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using Microsoft.Extensions.Hosting;
