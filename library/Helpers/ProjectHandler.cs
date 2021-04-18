@@ -6,6 +6,7 @@ using System.Text.Json;
 using pm.Models;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
+using System.Xml;
 
 namespace pm.Helpers
 {
@@ -29,6 +30,89 @@ namespace pm.Helpers
 
         public IConfiguration Configuration { get; }
         private SettingsHandler Settings { get; }
+
+        public SettingsModel GetInfoSettingsPmFile(string projectPath)
+        {
+            var files = Directory.GetFiles(projectPath);
+
+            foreach (var file in files)
+            {   
+                var filename = Path.GetFileName(file);
+
+                if (filename == "settings.pm.json")
+                {
+                    var text = File.ReadAllText(file);
+                    var settings = JsonSerializer.Deserialize<SettingsModel>(text);
+                    return settings;
+                }
+            }
+
+           throw new FileNotFoundException();
+        }
+
+        public void GetCommandInfoByXmlFile(string projectPath, string nameCommand)
+        {
+            var path = Directory.GetFiles($"{ projectPath }\\Commands");
+
+            foreach (string command in path)
+            {
+                if (Path.GetFileName(command) == $"{nameCommand}.xml")
+                {
+                    var reader = new XmlTextReader(command);
+
+                    while (reader.Read())
+                    {   
+                        if (reader.NodeType == XmlNodeType.Element && reader.Name == "Before")
+                        {
+                            if (!reader.IsEmptyElement)
+                            {
+                                var i = 0;
+                                while(reader.ReadToFollowing("run"))
+                                {
+                                    i = i + 1;
+                                    var run = reader.ReadElementContentAsString();
+                                    new MessagesHandler($"Running => Process { i }", MessageType.Information);
+
+                                    var runs = run.Split("|");
+
+                                    FileSystem.ChDir(projectPath);
+
+                                    //Executes the pipeline
+                                    Process process = new Process();
+                                    process.StartInfo.FileName = runs[0];
+                                    process.StartInfo.Arguments = runs[1];
+                                    process.Start();
+                                    process.WaitForExit();
+                                    process.Kill();
+
+                                    if(process.ExitCode > 0)
+                                    {
+                                        System.Console.WriteLine();
+                                        new MessagesHandler($"Process {i} have Fail", MessageType.Error);
+                                        return;
+                                    }
+
+                                    System.Console.WriteLine();
+                                    new MessagesHandler("Passed!", MessageType.Information);
+                                }
+
+                                System.Console.WriteLine();
+                                new MessagesHandler("Completed!", MessageType.Information);
+                            }
+                        }
+                    }   
+                }
+            }
+        }
+
+        public void OpenXmlFileInProject(string nameCommand)
+        {
+            var rootPath = Settings.Location;
+            GetCommandInfoByXmlFile(rootPath, nameCommand);
+            // var settings = GetCommandInfoByXmlFile(rootPath);
+            
+
+        }
 
         //Handler's Of Commands
 

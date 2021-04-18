@@ -1,0 +1,6 @@
+<build>
+    <Before>
+        <run name="Testing">dotnet|test</run>
+        <run>git|push origin Test</run>
+    </Before>
+</build>
