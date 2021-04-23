@@ -27,6 +27,7 @@ namespace pm.Helpers
             var file = JsonSerializer.Deserialize<AppSettings>(jsonString);
 
             var settings = new AppSettings{
+                ProjectPath = file.ProjectPath,
                 CurrentEditor = currentEditor == null ? file.CurrentEditor : currentEditor,
                 EditorPath = editorPath == null ? file.EditorPath : new { editorPath, file.EditorPath }
             };

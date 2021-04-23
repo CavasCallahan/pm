@@ -358,7 +358,7 @@ namespace pm.Helpers
                 try
                 {
                     Settings.setValue(editor);
-                    new MessagesHandler("The current editor was change!", MessageType.Information);
+                    new MessagesHandler($"The current editor was change!, for { editor }", MessageType.Information);
                 }
                 catch (System.Exception)
                 {
