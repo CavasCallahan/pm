@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "test", "test\test.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManager", "cli\ProjectManager.csproj", "{76F1972A-4103-4AD7-A123-C6993B8B99D8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "plugin", "plugin\plugin.csproj", "{EA597973-85C9-4EEB-95C9-B6FBF38EF5C3}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "app", "app\app.csproj", "{AB9408E7-C2A1-4AA2-97A6-61BF3A2A9820}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "app.library", "app.library\app.library.csproj", "{F50809C2-7ECF-4960-B686-8F2469523905}"

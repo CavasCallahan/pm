@@ -15,6 +15,8 @@ namespace ProjectManager
     {
         public static ExtentionHelper Helper { get; set; }
 
+        public delegate IServiceProvider ServiceResolver(string key);
+
         static void Main(string[] args)
         {
             var root = Directory.GetCurrentDirectory();

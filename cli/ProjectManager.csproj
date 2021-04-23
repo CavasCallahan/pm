@@ -22,7 +22,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\library\pm.csproj" />
-    <ProjectReference Include="..\plugin\plugin.csproj" />
   </ItemGroup>
 
 </Project>

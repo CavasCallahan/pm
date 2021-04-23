@@ -9,10 +9,11 @@ namespace ProjectManager.Commands
         public Run(ProjectHandler handler) : base("run", "Run a command on the file settings.pm.json")
         {
             Run = arg => { 
-                var command = string.Join(", ", arg);
+                var command = string.Join(" ", arg);
 
                 if (command.Length > 0)
                 {
+                    CheckXmlFile(command);
                     RunCommand(command);   
                 }
                 else
@@ -21,6 +22,11 @@ namespace ProjectManager.Commands
                 }
              };
             Handler = handler;
+        }
+
+        private void CheckXmlFile(string command)
+        {
+            Handler.OpenXmlFileInProject(command);
         }
 
         private void RunCommand(string command)

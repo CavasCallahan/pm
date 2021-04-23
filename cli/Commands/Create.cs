@@ -50,6 +50,9 @@ namespace ProjectManager.Commands
                     case "python":
                         Handler.CreateProject(projectName, ProjectType.Python);
                     break;
+                    case "plugin":
+                        Handler.CreateProject(projectName, ProjectType.Plugin);
+                    break;
                 }
             }
             else

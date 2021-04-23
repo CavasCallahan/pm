@@ -1,0 +1,10 @@
+{
+    "ProjectName": "Your-Project-Name",
+    "Description": "Your-Project-Description",
+    "Scripts": [
+        {
+            "Name": "setup",
+            "Command": "dotnet|new classlib"
+        }
+    ]
+}
