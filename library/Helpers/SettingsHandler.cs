@@ -22,9 +22,7 @@ namespace pm.Helpers
         public string Location { get; set; }
 
         public void setValue(string currentEditor = null, object editorPath = null)
-        {
-            //var baseDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            
+        {            
             var jsonString = File.ReadAllText("appsettings.json");
             var file = JsonSerializer.Deserialize<AppSettings>(jsonString);
 
