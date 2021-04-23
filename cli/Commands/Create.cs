@@ -1,12 +1,13 @@
 using Mono.Options;
 using System;
 using pm.Helpers;
+using System.IO;
 
 namespace ProjectManager.Commands
 {
     public class Create : Command
     {
-        public Create(ProjectHandler handler) : base("create", "Create's things that the name ok read please")
+        public Create(ProjectHandler handler, SettingsHandler settings) : base("create", "Create's new project with multiple Templates avaible by pm")
         {
             bool shouldShowHelp = false;
 
@@ -18,6 +19,7 @@ namespace ProjectManager.Commands
             Options = options;
             Run = arg => { 
                 var project = string.Join(", ", arg);
+                System.Console.WriteLine(project);
                 if (shouldShowHelp)
                 {
                     Console.WriteLine ("Options:");
@@ -29,14 +31,25 @@ namespace ProjectManager.Commands
                     }
                     else
                     {
-                        new MessagesHandler("You have to write the name of the project", MessageType.Normal);
+                        System.Console.WriteLine("Templates Avaible: ");
+                        System.Console.WriteLine();
+
+                        string[] templates = Directory.GetDirectories(Settings.GetTemplatePath());
+                        
+                        foreach (var template in templates)
+                        {
+                            System.Console.WriteLine($"=> { Path.GetFileName(template).ToLower() }");
+                            System.Console.WriteLine();
+                        }
                     }
                 }
              };
             Handler = handler;
+            Settings = settings;
         }
         public string Type { get; private set; }
         public ProjectHandler Handler { get; }
+        public SettingsHandler Settings { get; }
 
         private void CreateProject(string projectName, string Type = null)
         {

@@ -77,7 +77,6 @@ namespace ProjectManager
                 commands.Run(args);
             } catch (System.Exception) {
                 return;
-                // new MessagesHandler(e.Message, MessageType.Information);
             }
         }
     }
