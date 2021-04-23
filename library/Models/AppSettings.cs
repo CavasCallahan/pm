@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace pm.Models
 {
     public class AppSettings
