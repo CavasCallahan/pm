@@ -34,6 +34,7 @@ namespace ProjectManager
         public SettingsHandler Handler { get; }
         public Settings Settings { get; }
         public Execute Execute { get; }
+        
         public void Run(string[] args, string root)
         {
             Handler.Location = root;
@@ -43,9 +44,9 @@ namespace ProjectManager
             {
                 var pmDir = new DirectoryInfo(Handler.PathToPmDirectory);
                 pmDir.Create();
+                pmDir.Attributes = FileAttributes.Hidden;
 
                 var list = new List<string>();
-                list.Add(@"C:\Example\AnotherFolder\Project-Name");
 
                 var example = new RedirectModel{
                     Redirect = list

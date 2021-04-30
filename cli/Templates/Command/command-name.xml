@@ -1,0 +1,5 @@
+<Project-Name>
+    <Before>
+        <run>Command That You wanna build</run>
+    </Before>
+</Project-Name>

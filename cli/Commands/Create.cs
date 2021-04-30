@@ -7,7 +7,7 @@ namespace ProjectManager.Commands
 {
     public class Create : Command
     {
-        public Create(ProjectHandler handler, SettingsHandler settings) : base("create", "Create's new project with multiple Templates avaible by pm")
+        public Create(ProjectHandler handler, SettingsHandler settings) : base("new", "Create's new project with multiple Templates avaible by pm")
         {
             bool shouldShowHelp = false;
 
@@ -19,7 +19,7 @@ namespace ProjectManager.Commands
             Options = options;
             Run = arg => { 
                 var project = string.Join(", ", arg);
-                System.Console.WriteLine(project);
+
                 if (shouldShowHelp)
                 {
                     Console.WriteLine ("Options:");
@@ -31,6 +31,8 @@ namespace ProjectManager.Commands
                     }
                     else
                     {
+                        System.Console.WriteLine("pmp create ['Project-Name'] -t ['Template']");
+                        System.Console.WriteLine();
                         System.Console.WriteLine("Templates Avaible: ");
                         System.Console.WriteLine();
 
@@ -65,6 +67,9 @@ namespace ProjectManager.Commands
                     break;
                     case "plugin":
                         Handler.CreateProject(projectName, ProjectType.Plugin);
+                    break;
+                    case "command":
+                        Handler.CreateProject(null, ProjectType.Command, projectName);
                     break;
                 }
             }

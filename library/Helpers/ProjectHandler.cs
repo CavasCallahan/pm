@@ -117,7 +117,7 @@ namespace pm.Helpers
         //Handler's Of Commands
 
         #region Creation and Removing Project's
-        public void CreateProject(string projectPath, ProjectType type)
+        public void CreateProject(string projectPath, ProjectType type, string command = null)
         {
             switch (type)
             {
@@ -133,9 +133,23 @@ namespace pm.Helpers
                 case ProjectType.Plugin:
                     CreateTemplate("Plugin", projectPath);
                 break;
+                case ProjectType.Command:
+                    CreateCommand(command, projectPath);
+                break;
             }
         }
         
+        private void CreateCommand(string commandName, string projectPath)
+        {
+            var commandFolder = $@"{Settings.Location}\Commands";
+            System.Console.WriteLine(commandFolder);
+
+            if (File.Exists(commandFolder))
+            {
+                System.Console.WriteLine("Exits");
+            }
+        }
+
         private void CreateTemplate(string Type, string projectPath)
         {
             var template = Settings.GetTemplatePath();
@@ -382,7 +396,7 @@ namespace pm.Helpers
         }
         #endregion
        
-       #region ProjectSettings releated
+        #region ProjectSettings releated
            
         public void RunProjectCommand(string command)
         {

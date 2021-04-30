@@ -7,7 +7,7 @@ namespace ProjectManager.Commands
 {
     public class Execute : Command
     {
-        public Execute(ExtentionHelper helper) : base("exec", "Executes an extention")
+        public Execute(ExtentionHelper helper) : base("exe", "Executes an extention")
         {
              bool shouldShowHelp = false;
 
