@@ -13,7 +13,6 @@ namespace ProjectManager
         public StartService(Create create, Init init, Open open, Editor editor, Remove remove, Run runCommand, SettingsHandler handler,
         Settings settings, Execute execute)
         {
-            
             Create = create;
             Init = init;
             Open = open;
@@ -60,6 +59,10 @@ namespace ProjectManager
                 File.WriteAllText($"{ Handler.PathToPmDirectory }\\redirect.json",jsonString);
             }
 
+            var options_args = new OptionSet{
+                 { "g", "graphical user interface to pmp", n => System.Console.WriteLine("hello") }, 
+            };
+
             //Commands to run
             var commands = new CommandSet("commands"){
                 Create,
@@ -73,8 +76,7 @@ namespace ProjectManager
             };
 
             try {
-                //Runs the commands
-                commands.Run(args);
+                var result = commands.Run(args);
             } catch (System.Exception) {
                 return;
             }
