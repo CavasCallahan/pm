@@ -253,6 +253,47 @@ namespace pm.Helpers
             }
         }
 
+        public ProjectModel[] ListProjects()
+        {
+            ProjectModel[] result = {};
+            List<ProjectModel> list = new List<ProjectModel>();
+
+            var root = Settings.GetValue<string>("ProjectPath");
+            var jsonString = File.ReadAllText(Path.Combine(Settings.PathToPmDirectory, "redirect.json"));
+            var redirectObject = JsonSerializer.Deserialize<RedirectModel>(jsonString);
+
+            var directories = Directory.GetDirectories(root);
+
+            foreach (var dir in directories)
+            {
+                var project = new ProjectModel{
+                    Title = Path.GetFileName(dir),
+                    Path = dir
+                };
+
+                var directoryInfo = new DirectoryInfo(project.Path);
+
+                if (!directoryInfo.Attributes.HasFlag(FileAttributes.Hidden))
+                {
+                    list.Add(project);
+                }
+            }
+
+            foreach (var dir in redirectObject.Redirect)
+            {
+                var project = new ProjectModel{
+                    Title = Path.GetFileName(dir),
+                    Path = dir
+                };
+
+                list.Add(project);
+            }
+
+            result = list.ToArray();
+
+            return result;
+        }
+
         public void RemoveProject(string projectName)
         {
             var root = Settings.GetValue<string>("ProjectPath");
