@@ -11,7 +11,7 @@ namespace ProjectManager
     public class StartService
     {
         public StartService(Create create, Init init, Open open, Editor editor, Remove remove, Run runCommand, SettingsHandler handler,
-        Settings settings, Execute execute)
+        Settings settings, Execute execute, GraphInterfaceCommand graph)
         {
             Create = create;
             Init = init;
@@ -22,6 +22,7 @@ namespace ProjectManager
             Handler = handler;
             Settings = settings;
             Execute = execute;
+            Graph = graph;
         }
 
         public Create Create { get; }
@@ -33,7 +34,8 @@ namespace ProjectManager
         public SettingsHandler Handler { get; }
         public Settings Settings { get; }
         public Execute Execute { get; }
-        
+        public GraphInterfaceCommand Graph { get; }
+
         public void Run(string[] args, string root)
         {
             Handler.Location = root;
@@ -59,10 +61,6 @@ namespace ProjectManager
                 File.WriteAllText($"{ Handler.PathToPmDirectory }\\redirect.json",jsonString);
             }
 
-            var options_args = new OptionSet{
-                 { "g", "graphical user interface to pmp", n => System.Console.WriteLine("hello") }, 
-            };
-
             //Commands to run
             var commands = new CommandSet("commands"){
                 Create,
@@ -72,11 +70,12 @@ namespace ProjectManager
                 Remove,
                 RunCommand,
                 Settings,
-                Execute
+                Execute,
+                Graph
             };
 
             try {
-                var result = commands.Run(args);
+                commands.Run(args);
             } catch (System.Exception) {
                 return;
             }

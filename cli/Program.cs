@@ -40,6 +40,7 @@ namespace ProjectManager
                 services.AddTransient<Run>();
                 services.AddTransient<Settings>();
                 services.AddTransient<Execute>();
+                services.AddTransient<GraphInterfaceCommand>();
             })
             .Build();
             
