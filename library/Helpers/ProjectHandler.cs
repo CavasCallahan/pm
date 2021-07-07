@@ -117,7 +117,7 @@ namespace pm.Helpers
         //Handler's Of Commands
 
         #region Creation and Removing Project's
-        public void CreateProject(string projectPath, ProjectType type)
+        public void CreateProject(string projectPath, ProjectType type, string command = null)
         {
             switch (type)
             {
@@ -133,9 +133,23 @@ namespace pm.Helpers
                 case ProjectType.Plugin:
                     CreateTemplate("Plugin", projectPath);
                 break;
+                case ProjectType.Command:
+                    CreateCommand(command, projectPath);
+                break;
             }
         }
         
+        private void CreateCommand(string commandName, string projectPath)
+        {
+            var commandFolder = $@"{Settings.Location}\Commands";
+            System.Console.WriteLine(commandFolder);
+
+            if (File.Exists(commandFolder))
+            {
+                System.Console.WriteLine("Exits");
+            }
+        }
+
         private void CreateTemplate(string Type, string projectPath)
         {
             var template = Settings.GetTemplatePath();
@@ -237,6 +251,47 @@ namespace pm.Helpers
                     new MessagesHandler("The project was initialize!", MessageType.Information);
                 }
             }
+        }
+
+        public ProjectModel[] ListProjects()
+        {
+            ProjectModel[] result = {};
+            List<ProjectModel> list = new List<ProjectModel>();
+
+            var root = Settings.GetValue<string>("ProjectPath");
+            var jsonString = File.ReadAllText(Path.Combine(Settings.PathToPmDirectory, "redirect.json"));
+            var redirectObject = JsonSerializer.Deserialize<RedirectModel>(jsonString);
+
+            var directories = Directory.GetDirectories(root);
+
+            foreach (var dir in directories)
+            {
+                var project = new ProjectModel{
+                    Title = Path.GetFileName(dir),
+                    Path = dir
+                };
+
+                var directoryInfo = new DirectoryInfo(project.Path);
+
+                if (!directoryInfo.Attributes.HasFlag(FileAttributes.Hidden))
+                {
+                    list.Add(project);
+                }
+            }
+
+            foreach (var dir in redirectObject.Redirect)
+            {
+                var project = new ProjectModel{
+                    Title = Path.GetFileName(dir),
+                    Path = dir
+                };
+
+                list.Add(project);
+            }
+
+            result = list.ToArray();
+
+            return result;
         }
 
         public void RemoveProject(string projectName)
@@ -358,7 +413,7 @@ namespace pm.Helpers
                 try
                 {
                     Settings.setValue(editor);
-                    new MessagesHandler("The current editor was change!", MessageType.Information);
+                    new MessagesHandler($"The current editor was change!, for { editor }", MessageType.Information);
                 }
                 catch (System.Exception)
                 {
@@ -382,7 +437,7 @@ namespace pm.Helpers
         }
         #endregion
        
-       #region ProjectSettings releated
+        #region ProjectSettings releated
            
         public void RunProjectCommand(string command)
         {

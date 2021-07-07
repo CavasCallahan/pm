@@ -8,6 +8,7 @@ using ProjectManager.Helpers;
 using System.Diagnostics;
 using Microsoft.VisualBasic;
 using pm.Helpers;
+using ProjectManager.Graphics.Pages;
 
 namespace ProjectManager
 {
@@ -40,6 +41,10 @@ namespace ProjectManager
                 services.AddTransient<Run>();
                 services.AddTransient<Settings>();
                 services.AddTransient<Execute>();
+                services.AddTransient<GraphInterfaceCommand>();
+
+                //Pages
+                services.AddTransient<StartPage>();
             })
             .Build();
             

@@ -22,13 +22,12 @@ namespace pm.Helpers
         public string Location { get; set; }
 
         public void setValue(string currentEditor = null, object editorPath = null)
-        {
-            //var baseDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            
+        {            
             var jsonString = File.ReadAllText("appsettings.json");
             var file = JsonSerializer.Deserialize<AppSettings>(jsonString);
 
             var settings = new AppSettings{
+                ProjectPath = file.ProjectPath,
                 CurrentEditor = currentEditor == null ? file.CurrentEditor : currentEditor,
                 EditorPath = editorPath == null ? file.EditorPath : new { editorPath, file.EditorPath }
             };

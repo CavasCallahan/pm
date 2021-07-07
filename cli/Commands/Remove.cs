@@ -5,7 +5,7 @@ namespace ProjectManager.Commands
 {
     public class Remove : Command
     {
-        public Remove(ProjectHandler handler) : base("remove", "Remove a project!")
+        public Remove(ProjectHandler handler) : base("rm", "Remove a project!")
         {
             Run = arg => { 
                 var project = string.Join(", ", arg);
