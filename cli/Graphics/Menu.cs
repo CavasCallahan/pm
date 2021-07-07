@@ -1,4 +1,5 @@
 using System;
+using pm.Models;
 
 namespace ProjectManager.Graphics
 {
@@ -73,7 +74,7 @@ namespace ProjectManager.Graphics
 
             } while(keyPressed != ConsoleKey.Enter);
 
-            return 1;
+            return SelectedIndex;
         }
     }
 }
