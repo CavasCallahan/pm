@@ -1,6 +1,7 @@
 using pm.Helpers;
 using pm.Models;
 using ProjectManager.Commands;
+using System;
 using System.Collections.Generic;
 
 namespace ProjectManager.Graphics.Pages
@@ -21,19 +22,18 @@ namespace ProjectManager.Graphics.Pages
             ProjectModel[] projects = Handler.ListProjects();
             List<string> list = new List<string>();
 
-
             string[] options = {};
 
             foreach (var project in projects)
             {
                list.Add(project.Title);
             }
-            
+
             options = list.ToArray();
 
             Menu menu = new Menu("Welcome to the new graphical interface!", options);
             int selectedIndex = menu.Run();
-
+        
             Graphic.ProfilePage.Run(projects[selectedIndex]);
         }
     }

@@ -38,7 +38,6 @@ namespace ProjectManager.Graphics
             }
             Console.ResetColor();
         }
-
         public int Run()
         {
             ConsoleKey keyPressed;
@@ -70,9 +69,8 @@ namespace ProjectManager.Graphics
                         SelectedIndex = 0;
                     }
                 }
-                
 
-            } while(keyPressed != ConsoleKey.Enter);
+            } while(keyPressed != ConsoleKey.Enter || keyPressed == ConsoleKey.C);
 
             return SelectedIndex;
         }
