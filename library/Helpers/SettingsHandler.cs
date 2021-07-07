@@ -3,6 +3,7 @@ using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 using pm.Models;
+using pm.Helpers;
 
 namespace pm.Helpers
 {
@@ -40,6 +41,40 @@ namespace pm.Helpers
             File.WriteAllText("appsettings.json",data);
         }
         
+        public void writeRedirectFile(string folder)
+        {
+            var root = Path.Join(PathToPmDirectory, "redirect.json");
+
+            var jsonString = File.ReadAllText(root);
+            var file = JsonSerializer.Deserialize<RedirectModel>(jsonString);
+
+            file.Redirect.Add(folder);
+
+            var options = new JsonSerializerOptions{
+                WriteIndented = true
+            };
+
+            var data = JsonSerializer.Serialize<RedirectModel>(file, options);
+            File.WriteAllText(root, data);   
+        }
+
+         public void DeleteFromRedirectFile(string folder)
+        {
+            var root = Path.Join(PathToPmDirectory, "redirect.json");
+
+            var jsonString = File.ReadAllText(root);
+            var file = JsonSerializer.Deserialize<RedirectModel>(jsonString);
+
+            file.Redirect.Remove(folder);
+
+            var options = new JsonSerializerOptions{
+                WriteIndented = true
+            };
+
+            var data = JsonSerializer.Serialize<RedirectModel>(file, options);
+            File.WriteAllText(root, data);   
+        }
+
         public object ListEditors()
         {
             var jsonString = File.ReadAllText("appsettings.json");

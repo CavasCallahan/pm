@@ -297,6 +297,9 @@ namespace pm.Helpers
         public void RemoveProject(string projectName)
         {
             var root = Settings.GetValue<string>("ProjectPath");
+            
+            var jsonString = File.ReadAllText(Path.Combine(Settings.PathToPmDirectory, "redirect.json"));
+            var redirectObject = JsonSerializer.Deserialize<RedirectModel>(jsonString);
 
             var directories = Directory.GetDirectories(root);
 
@@ -314,6 +317,23 @@ namespace pm.Helpers
                         return;
                     }
                 }
+
+                foreach (var dir in redirectObject.Redirect)
+                {
+                    var dirName = Path.GetDirectoryName(dir);
+                    var folder = @$"{dirName}\{projectName}";
+                    if (dir == folder)
+                    {
+                        var directory = new DirectoryInfo(folder);
+                        directory.Delete(true);
+
+                        Settings.DeleteFromRedirectFile(folder);
+
+                        new MessagesHandler($"{ projectName } was deleted!", MessageType.Information);
+                        return;
+                    }
+                }
+
                 new MessagesHandler($"Pm didn't find any project with the name { projectName }", MessageType.Normal);
             }
             catch (System.Exception)
