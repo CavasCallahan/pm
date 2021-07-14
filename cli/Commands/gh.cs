@@ -17,12 +17,14 @@ namespace ProjectManager.Commands
             StartPage = new StartPage(this, Handler);
             ProfilePage = new ProfilePage(this, Handler);
             WarningPage = new WarningPage(this);
+            CreatePage = new CreatePage(this);
         }
 
         public ProjectHandler Handler { get; }
         public StartPage StartPage { get; }
         public ProfilePage ProfilePage { get; }
         public WarningPage WarningPage { get; }
+        public CreatePage CreatePage { get; }
 
         private void Start()
         {

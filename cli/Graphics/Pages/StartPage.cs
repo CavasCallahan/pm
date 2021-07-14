@@ -10,11 +10,8 @@ namespace ProjectManager.Graphics.Pages
     {
         public StartPage(GraphInterfaceCommand graph, ProjectHandler handler) : base(graph)
         {
-            Graphic = graph;
             Handler = handler;
         }
-
-        public GraphInterfaceCommand Graphic { get; }
         public ProjectHandler Handler { get; }
 
         public override void Run()
@@ -33,8 +30,19 @@ namespace ProjectManager.Graphics.Pages
 
             Menu menu = new Menu("Welcome to the new graphical interface!", options);
             int selectedIndex = menu.Run();
-        
-            Graphic.ProfilePage.Run(projects[selectedIndex]);
+
+            // Pressed C key
+            if (selectedIndex == options.Length + 1)
+            {
+                Graph.CreatePage.Run();
+            }
+
+            if (selectedIndex == options.Length + 2)
+            {
+                Environment.Exit(0);
+            }
+
+            Graph.ProfilePage.Run(projects[selectedIndex]);
         }
     }
 }
