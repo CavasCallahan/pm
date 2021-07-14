@@ -30,7 +30,18 @@ namespace ProjectManager.Graphics.Pages
 
             Menu menu = new Menu("Welcome to the new graphical interface!", options);
             int selectedIndex = menu.Run();
-        
+
+            // Pressed C key
+            if (selectedIndex == options.Length + 1)
+            {
+                Graph.CreatePage.Run();
+            }
+
+            if (selectedIndex == options.Length + 2)
+            {
+                Environment.Exit(0);
+            }
+
             Graph.ProfilePage.Run(projects[selectedIndex]);
         }
     }

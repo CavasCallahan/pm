@@ -60,6 +60,14 @@ namespace ProjectManager.Graphics
                         SelectedIndex = Options.Length - 1;
                     }
                 }
+                else if (keyPressed == ConsoleKey.C)
+                {
+                    return Options.Length + 1;
+                }
+                else if (keyPressed == ConsoleKey.Q || keyPressed == ConsoleKey.Spacebar)
+                {
+                    return Options.Length + 2;
+                }
                 else if (keyPressed == ConsoleKey.DownArrow)
                 {
                     SelectedIndex ++;
