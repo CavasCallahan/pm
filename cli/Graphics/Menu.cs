@@ -5,9 +5,9 @@ namespace ProjectManager.Graphics
 {
     public class Menu
     {
-        public int SelectedIndex { get; set; }
-        public string[] Options { get; set; }
-        public string Prompt { get; set; }
+        private int SelectedIndex { get; set; }
+        private string[] Options { get; set; }
+        private string Prompt { get; set; }
         
         public Menu(string prompt, string[] options)
         {
@@ -15,6 +15,10 @@ namespace ProjectManager.Graphics
             Options = options;
         }
 
+        public Menu(bool clearOnScreen)
+        {
+            
+        }
         private void DisplayOptions()
         {
             Console.WriteLine(Prompt);
@@ -45,6 +49,7 @@ namespace ProjectManager.Graphics
             do
             {
                 Console.Clear();
+
                 DisplayOptions();
 
                 ConsoleKeyInfo KeyInfo = Console.ReadKey(true);

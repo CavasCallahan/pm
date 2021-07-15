@@ -37,6 +37,7 @@ namespace ProjectManager.Graphics.Pages
                 Graph.CreatePage.Run();
             }
 
+            //Pressed Exit Key
             if (selectedIndex == options.Length + 2)
             {
                 Environment.Exit(0);
