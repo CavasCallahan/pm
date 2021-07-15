@@ -38,7 +38,7 @@ namespace ProjectManager.Graphics
                     Console.BackgroundColor = ConsoleColor.Black;
                 }
 
-                Console.WriteLine($"<<{ currentOption }>>");
+                Console.WriteLine($"<< { currentOption } >>");
             }
             Console.ResetColor();
         }

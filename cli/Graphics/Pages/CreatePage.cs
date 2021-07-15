@@ -17,10 +17,8 @@ namespace ProjectManager.Graphics.Pages
             Console.Clear();
             
             //TextBox
-            new MessagesHandler("Write the Name of the Project!", MessageType.Information);
-            Console.CursorVisible = true;
-            var projectName = Console.ReadLine();
-            Console.CursorVisible = false;
+            var textBox = new TextBox("Write the Name of the Project!");
+            var projectName = textBox.Run();
 
             if (projectName.Length > 0)
             {
