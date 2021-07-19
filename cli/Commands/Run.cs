@@ -1,6 +1,5 @@
 using Mono.Options;
 using pm.Helpers;
-using pm;
 
 namespace ProjectManager.Commands
 {

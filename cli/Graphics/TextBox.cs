@@ -14,15 +14,24 @@ namespace ProjectManager
         {
             new MessagesHandler("Write the Name of the Project!", MessageType.Information);
             Console.CursorVisible = true;
-            
-            Console.CursorVisible = false;
         }
 
         public string Run()
         {
-            var projectName = Console.ReadLine();
+            ConsoleModifiers KeyPressed;
+            string projectName;
+
+            while ((projectName = Console.ReadLine()) != null)
+            {
+                Console.CancelKeyPress += new ConsoleCancelEventHandler(ListennerHandler);
+            }
 
             return projectName;
+        }
+
+        private void ListennerHandler(object sender, ConsoleCancelEventArgs e)
+        {
+            
         }
     }
 }
