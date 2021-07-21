@@ -75,7 +75,9 @@ namespace ProjectManager
             };
 
             try {
+
                 commands.Run(args);
+
             } catch (System.Exception) {
                 return;
             }
