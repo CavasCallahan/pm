@@ -17,7 +17,7 @@ namespace ProjectManager.Commands
                 }
                 else
                 {
-                    new MessagesHandler("You have to especify want command you gonna run!", MessageType.Normal);
+                    MessagesHandler.Message("You have to especify want command you gonna run!", MessageType.Normal);
                 }
              };
             Handler = handler;
