@@ -29,6 +29,7 @@ namespace ProjectManager.Graphics.Pages
             options = list.ToArray();
 
             Menu menu = new Menu("Welcome to the new graphical interface!", options);
+            menu.addFooter($"\nProject's count: -{list.Count}-      [q]quit     [c]create    \n");
             int selectedIndex = menu.Run();
 
             // Pressed C key
