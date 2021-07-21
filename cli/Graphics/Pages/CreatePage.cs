@@ -25,7 +25,7 @@ namespace ProjectManager.Graphics.Pages
                 string[] options = { "Normal", "Csharp", "Java", "Plugin", "Python", "Command", "Exit" };
 
                 Menu menu = new Menu("Chose what project type do you wanna use", options);
-                
+
                 var index = menu.Run();
 
                 switch (index)
