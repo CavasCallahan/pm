@@ -1,25 +1,27 @@
 using System;
+using System.Collections.Generic;
 using pm.Models;
 
 namespace ProjectManager.Graphics
 {
-    public class Menu
+    public class Menu : IMenu
     {
-        public int SelectedIndex { get; set; }
-        public string[] Options { get; set; }
-        public string Prompt { get; set; }
+        private int SelectedIndex { get; set; }
+        private string[] Options { get; set; }
+        private string Prompt { get; set; }
+
+        private List<string> DisplayOptionsList {get; set;} = new List<string>();
         
         public Menu(string prompt, string[] options)
         {
             Prompt = prompt;
             Options = options;
         }
-
         private void DisplayOptions()
         {
             Console.WriteLine(Prompt);
 
-            for (int i = 0; i < Options.Length; i++)
+            for (int i = 0; i < (Options.Length); i++)
             {
                 string currentOption = Options[i];
                 
@@ -34,10 +36,11 @@ namespace ProjectManager.Graphics
                     Console.BackgroundColor = ConsoleColor.Black;
                 }
 
-                Console.WriteLine($"<<{ currentOption }>>");
+                Console.WriteLine($"<< { currentOption } >>");
             }
             Console.ResetColor();
         }
+
         public int Run()
         {
             ConsoleKey keyPressed;
@@ -46,6 +49,7 @@ namespace ProjectManager.Graphics
             {
                 Console.Clear();
                 DisplayOptions();
+                DrawOptions();
 
                 ConsoleKeyInfo KeyInfo = Console.ReadKey(true);
 
@@ -81,6 +85,21 @@ namespace ProjectManager.Graphics
             } while(keyPressed != ConsoleKey.Enter || keyPressed == ConsoleKey.C);
 
             return SelectedIndex;
+        }
+
+        private void DrawOptions()
+        {
+            foreach (var option in DisplayOptionsList)
+            {
+                System.Console.WriteLine(option);
+            }
+        }
+
+        public IMenu addFooter(string prompt)
+        {
+            DisplayOptionsList.Add(prompt);
+
+            return this;
         }
     }
 }
