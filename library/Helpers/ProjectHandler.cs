@@ -445,14 +445,14 @@ namespace pm.Helpers
         {
             var project_settings = GetInfoSettingsPmFile(project_path);
 
-            if (project_settings != null)
+            if (project_settings != null && project_settings.Editor?.Length > 0)
             {
                 var editor_path = Settings.GetValue<string>($"EditorPath: {project_settings.Editor}");
 
                 return (project_settings.Editor, editor_path);
             } 
 
-            return ("","");
+            return ("Has no Editor","---");
         }
         public void ChangeEditor(string editor)
         {
