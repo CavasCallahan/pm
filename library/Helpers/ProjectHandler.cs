@@ -111,7 +111,7 @@ namespace pm.Helpers
             GetCommandInfoByXmlFile(rootPath, nameCommand);
             // var settings = GetCommandInfoByXmlFile(rootPath);
             
-
+            return;
         }
 
         //Handler's Of Commands
@@ -407,6 +407,8 @@ namespace pm.Helpers
                     process.StartInfo.FileName = editor;
                     process.StartInfo.Arguments = fileName;
                     process.Start();
+                    process.WaitForExit();
+                    process.Kill();
                 }
                 catch (System.Exception)
                 {
@@ -422,6 +424,8 @@ namespace pm.Helpers
                 process.StartInfo.FileName = editor;
                 process.StartInfo.Arguments = ".";
                 process.Start();
+                process.WaitForExit();
+                process.Kill();
             }
             catch (System.Exception)
             {

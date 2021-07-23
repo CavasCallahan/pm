@@ -7,13 +7,24 @@ namespace ProjectManager.Commands
     {
         public Run(ProjectHandler handler) : base("run", "Run a command on the file settings.pm.json")
         {
+            bool shouldUseComplex = false;
+
+            Options = new OptionSet{
+                { "c|complex" , "This switch allow you to use complex commands", c => shouldUseComplex = c != null}
+            };
+
             Run = arg => { 
                 var command = string.Join(" ", arg);
 
                 if (command.Length > 0)
                 {
-                    CheckXmlFile(command);
-                    RunCommand(command);   
+                    if (shouldUseComplex)
+                    {
+                        CheckXmlFile(command);
+                    }else
+                    {
+                        RunCommand(command);   
+                    }
                 }
                 else
                 {
