@@ -268,11 +268,13 @@ namespace pm.Helpers
             {
                 //Read settings.pm.json file to have acess
                 var settings = GetInfoSettingsPmFile(dir);
+                var editor_of_project = GetTheProjectEditor(dir);
 
                 var project = new ProjectModel{
                 Title = Path.GetFileName(dir),
                 Path = dir,
                 Description = settings == null ? "This Project has no Description" : settings.Description,
+                Editor = editor_of_project.editor_name
                 };
 
                 var directoryInfo = new DirectoryInfo(project.Path);
@@ -430,6 +432,20 @@ namespace pm.Helpers
         #endregion
 
         #region Editor Releted
+
+        public ( string editor_name, string path ) GetTheProjectEditor(string project_path)
+        {
+            var project_settings = GetInfoSettingsPmFile(project_path);
+
+            if (project_settings != null)
+            {
+                var editor_path = Settings.GetValue<string>($"EditorPath: {project_settings.Editor}");
+
+                return (project_settings.Editor, editor_path);
+            } 
+
+            return ("","");
+        }
         public void ChangeEditor(string editor)
         {
             if(editor.Length > 0)
@@ -466,7 +482,7 @@ namespace pm.Helpers
         public void RunProjectCommand(string command)
         {
             var root = Settings.Location;
-            var settings = Settings.ReadSettings(root);
+            var settings = Settings.ReadProjectSettings(root);
             
             if (settings.Scripts != null)
             {
