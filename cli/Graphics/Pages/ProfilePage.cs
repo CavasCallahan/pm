@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using pm.Helpers;
 using pm.Models;
 using ProjectManager.Commands;
@@ -17,7 +19,7 @@ namespace ProjectManager.Graphics.Pages
         {
             string[] options = {"Open","Remove", "Exit"};
 
-            Menu menu = new Menu($"\n {project.Title} \n", options);
+            Menu menu = new Menu($"\n {project.Title} \n \n Description: \n {project.Description} \n", options);
             int selectedIndex = menu.Run();
 
             switch (selectedIndex)

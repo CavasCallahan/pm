@@ -28,7 +28,7 @@ namespace pm.Helpers
 
         public string TemplatePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"Template");
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
         private SettingsHandler Settings { get; }
 
         public SettingsModel GetInfoSettingsPmFile(string projectPath)
@@ -47,7 +47,7 @@ namespace pm.Helpers
                 }
             }
 
-           throw new FileNotFoundException();
+            return null;
         }
 
         public void GetCommandInfoByXmlFile(string projectPath, string nameCommand)
@@ -266,9 +266,13 @@ namespace pm.Helpers
 
             foreach (var dir in directories)
             {
+                //Read settings.pm.json file to have acess
+                var settings = GetInfoSettingsPmFile(dir);
+
                 var project = new ProjectModel{
-                    Title = Path.GetFileName(dir),
-                    Path = dir
+                Title = Path.GetFileName(dir),
+                Path = dir,
+                Description = settings == null ? "This Project has no Description" : settings.Description,
                 };
 
                 var directoryInfo = new DirectoryInfo(project.Path);
