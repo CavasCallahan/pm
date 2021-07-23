@@ -142,11 +142,15 @@ namespace pm.Helpers
         private void CreateCommand(string commandName, string projectPath)
         {
             var commandFolder = $@"{Settings.Location}\Commands";
-            System.Console.WriteLine(commandFolder);
 
             if (File.Exists(commandFolder))
             {
                 System.Console.WriteLine("Exits");
+            }else
+            {
+                Directory.CreateDirectory(commandFolder);
+                FileSystem.ChDir(commandFolder);
+                File.WriteAllText($"{commandName}.xml", "Write your commands here");
             }
         }
 
