@@ -4,6 +4,7 @@
 */obj/
 */build/
 cli/Extentions/*
+settings.pm.json
 
 Commands/*
 

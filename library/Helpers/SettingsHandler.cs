@@ -112,7 +112,7 @@ namespace pm.Helpers
             return $@"{ baseDirectory }\Extentions\";
         }
 
-        public SettingsModel ReadSettings(string rootPath)
+        public SettingsModel ReadProjectSettings(string rootPath)
         {
             var jsonString = File.ReadAllText($@"{rootPath}\settings.pm.json");
             var file = JsonSerializer.Deserialize<SettingsModel>(jsonString);

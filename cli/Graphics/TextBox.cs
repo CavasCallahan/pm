@@ -12,7 +12,7 @@ namespace ProjectManager
 
         private void DisplayTextBox()
         {
-            new MessagesHandler("Write the Name of the Project!", MessageType.Information);
+            MessagesHandler.Message("Write the Name of the Project!", MessageType.Information);
             Console.CursorVisible = true;
         }
 

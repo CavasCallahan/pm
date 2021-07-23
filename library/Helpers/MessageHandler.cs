@@ -7,9 +7,9 @@ namespace pm.Helpers
         Normal,
         Information
     }
-    public class MessagesHandler
+    public static class MessagesHandler
     {
-        public MessagesHandler(string message, MessageType type)
+        public static void Message(string message, MessageType type)
         {
             var oldColor = Console.ForegroundColor;
 

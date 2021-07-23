@@ -20,16 +20,14 @@ namespace pm.Builder
         public ProjectHandler ProjectHandler { get; set; }
         public SettingsHandler SettingsHandler { get; set; }
 
-        public MessagesHandler MessagesHandler { get; set; }
-
         public void Execute()
         {
             ProjectHandler handler = (ProjectHandler)Service.GetService(typeof(ProjectHandler));
             ProjectHandler = handler;
             SettingsHandler settings = (SettingsHandler)Service.GetService(typeof(SettingsHandler));
             SettingsHandler = settings;
-            MessagesHandler message = (MessagesHandler)Service.GetService(typeof(MessagesHandler));
-            MessagesHandler = message;
+            // MessagesHandler message = (MessagesHandler)Service.GetService(typeof(MessagesHandler));
+            // MessagesHandler = message;
         }
     }
 }

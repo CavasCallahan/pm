@@ -28,7 +28,7 @@ namespace pm.Helpers
 
         public string TemplatePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"Template");
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
         private SettingsHandler Settings { get; }
 
         public SettingsModel GetInfoSettingsPmFile(string projectPath)
@@ -47,7 +47,7 @@ namespace pm.Helpers
                 }
             }
 
-           throw new FileNotFoundException();
+            return null;
         }
 
         public void GetCommandInfoByXmlFile(string projectPath, string nameCommand)
@@ -71,7 +71,7 @@ namespace pm.Helpers
                                 {
                                     i = i + 1;
                                     var run = reader.ReadElementContentAsString();
-                                    new MessagesHandler($"Running => Process { i }", MessageType.Information);
+                                    MessagesHandler.Message($"Running => Process { i }", MessageType.Information);
 
                                     var runs = run.Split("|");
 
@@ -88,16 +88,16 @@ namespace pm.Helpers
                                     if(process.ExitCode > 0)
                                     {
                                         System.Console.WriteLine();
-                                        new MessagesHandler($"Process {i} have Fail", MessageType.Error);
+                                        MessagesHandler.Message($"Process {i} have Fail", MessageType.Error);
                                         return;
                                     }
 
                                     System.Console.WriteLine();
-                                    new MessagesHandler("Passed!", MessageType.Information);
+                                    MessagesHandler.Message("Passed!", MessageType.Information);
                                 }
 
                                 System.Console.WriteLine();
-                                new MessagesHandler("Completed!", MessageType.Information);
+                                MessagesHandler.Message("Completed!", MessageType.Information);
                             }
                         }
                     }   
@@ -111,7 +111,7 @@ namespace pm.Helpers
             GetCommandInfoByXmlFile(rootPath, nameCommand);
             // var settings = GetCommandInfoByXmlFile(rootPath);
             
-
+            return;
         }
 
         //Handler's Of Commands
@@ -142,11 +142,15 @@ namespace pm.Helpers
         private void CreateCommand(string commandName, string projectPath)
         {
             var commandFolder = $@"{Settings.Location}\Commands";
-            System.Console.WriteLine(commandFolder);
 
             if (File.Exists(commandFolder))
             {
                 System.Console.WriteLine("Exits");
+            }else
+            {
+                Directory.CreateDirectory(commandFolder);
+                FileSystem.ChDir(commandFolder);
+                File.WriteAllText($"{commandName}.xml", "Write your commands here");
             }
         }
 
@@ -181,11 +185,11 @@ namespace pm.Helpers
                 OpenCurrentEditor();
                 InitializeProject($"{root}/{projectPath}", projectPath);
 
-                new MessagesHandler($"The project { projectPath } was created! \n Happy hacking :)!", MessageType.Information);
+                MessagesHandler.Message($"The project { projectPath } was created! \n Happy hacking :)!", MessageType.Information);
             }
             else
             {
-                new MessagesHandler($"The project { projectPath } is already exists!", MessageType.Error);
+                MessagesHandler.Message($"The project { projectPath } is already exists!", MessageType.Error);
             }
 
         }
@@ -199,7 +203,7 @@ namespace pm.Helpers
 
             if(File.Exists($"{ projectPath }/settings.pm.json"))
             {
-                new MessagesHandler("The Project is already initialize", MessageType.Normal);
+                MessagesHandler.Message("The Project is already initialize", MessageType.Normal);
             }
             else
             {
@@ -248,7 +252,7 @@ namespace pm.Helpers
                     var json = JsonSerializer.Serialize(settings, options);
                     setings.Write(json);
 
-                    new MessagesHandler("The project was initialize!", MessageType.Information);
+                    MessagesHandler.Message("The project was initialize!", MessageType.Information);
                 }
             }
         }
@@ -266,9 +270,15 @@ namespace pm.Helpers
 
             foreach (var dir in directories)
             {
+                //Read settings.pm.json file to have acess
+                var settings = GetInfoSettingsPmFile(dir);
+                var editor_of_project = GetTheProjectEditor(dir);
+
                 var project = new ProjectModel{
-                    Title = Path.GetFileName(dir),
-                    Path = dir
+                Title = Path.GetFileName(dir),
+                Path = dir,
+                Description = settings == null ? "This Project has no Description" : settings.Description,
+                Editor = editor_of_project.editor_name
                 };
 
                 var directoryInfo = new DirectoryInfo(project.Path);
@@ -313,7 +323,7 @@ namespace pm.Helpers
                     {
                         var directory = new DirectoryInfo(folder);
                         directory.Delete(true);
-                        new MessagesHandler($"{ projectName } was deleted!", MessageType.Information);
+                        MessagesHandler.Message($"{ projectName } was deleted!", MessageType.Information);
                         return;
                     }
                 }
@@ -329,16 +339,16 @@ namespace pm.Helpers
 
                         Settings.DeleteFromRedirectFile(folder);
 
-                        new MessagesHandler($"{ projectName } was deleted!", MessageType.Information);
+                        MessagesHandler.Message($"{ projectName } was deleted!", MessageType.Information);
                         return;
                     }
                 }
 
-                new MessagesHandler($"Pm didn't find any project with the name { projectName }", MessageType.Normal);
+                MessagesHandler.Message($"Pm didn't find any project with the name { projectName }", MessageType.Normal);
             }
             catch (System.Exception)
             {
-                new MessagesHandler("Something went wrong!", MessageType.Error);
+                MessagesHandler.Message("Something went wrong!", MessageType.Error);
             }
         }
 
@@ -380,11 +390,11 @@ namespace pm.Helpers
                     }
                 }
 
-                new MessagesHandler($"Pm didn't find any project with the name { projectName }", MessageType.Normal);
+                MessagesHandler.Message($"Pm didn't find any project with the name { projectName }", MessageType.Normal);
             }
             catch(System.Exception)
             {
-                new MessagesHandler("Something went wrong!", MessageType.Error);
+                MessagesHandler.Message("Something went wrong!", MessageType.Error);
             }
         }
 
@@ -401,10 +411,12 @@ namespace pm.Helpers
                     process.StartInfo.FileName = editor;
                     process.StartInfo.Arguments = fileName;
                     process.Start();
+                    process.WaitForExit();
+                    process.Kill();
                 }
                 catch (System.Exception)
                 {
-                    new MessagesHandler("Something went wrong!", MessageType.Error);
+                    MessagesHandler.Message("Something went wrong!", MessageType.Error);
                 }
 
                 return;
@@ -416,16 +428,32 @@ namespace pm.Helpers
                 process.StartInfo.FileName = editor;
                 process.StartInfo.Arguments = ".";
                 process.Start();
+                process.WaitForExit();
+                process.Kill();
             }
             catch (System.Exception)
             {
-                new MessagesHandler("Something went wrong!", MessageType.Error);
+                MessagesHandler.Message("Something went wrong!", MessageType.Error);
             }
         }
 
         #endregion
 
         #region Editor Releted
+
+        public ( string editor_name, string path ) GetTheProjectEditor(string project_path)
+        {
+            var project_settings = GetInfoSettingsPmFile(project_path);
+
+            if (project_settings != null && project_settings.Editor?.Length > 0)
+            {
+                var editor_path = Settings.GetValue<string>($"EditorPath: {project_settings.Editor}");
+
+                return (project_settings.Editor, editor_path);
+            } 
+
+            return ("Has no Editor","---");
+        }
         public void ChangeEditor(string editor)
         {
             if(editor.Length > 0)
@@ -433,16 +461,16 @@ namespace pm.Helpers
                 try
                 {
                     Settings.setValue(editor);
-                    new MessagesHandler($"The current editor was change!, for { editor }", MessageType.Information);
+                    MessagesHandler.Message($"The current editor was change!, for { editor }", MessageType.Information);
                 }
                 catch (System.Exception)
                 {
-                    new MessagesHandler("Something went wrong!", MessageType.Error);
+                    MessagesHandler.Message("Something went wrong!", MessageType.Error);
                 }
             }
             else
             {
-                new MessagesHandler("The editor name must have a name", MessageType.Information);
+                MessagesHandler.Message("The editor name must have a name", MessageType.Information);
             }
         }
 
@@ -462,7 +490,7 @@ namespace pm.Helpers
         public void RunProjectCommand(string command)
         {
             var root = Settings.Location;
-            var settings = Settings.ReadSettings(root);
+            var settings = Settings.ReadProjectSettings(root);
             
             if (settings.Scripts != null)
             {
@@ -487,7 +515,7 @@ namespace pm.Helpers
                         }
                         catch (System.Exception)
                         {
-                            new MessagesHandler("Something went wrong!", MessageType.Error);
+                            MessagesHandler.Message("Something went wrong!", MessageType.Error);
                         }
                     }
                 }
@@ -495,7 +523,7 @@ namespace pm.Helpers
                 return;
             }
 
-            new MessagesHandler("Pm didn't find any script with that name", MessageType.Normal);
+            MessagesHandler.Message("Pm didn't find any script with that name", MessageType.Normal);
         }
 
        #endregion
