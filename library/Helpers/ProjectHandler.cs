@@ -7,9 +7,16 @@ using pm.Models;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace pm.Helpers
 {
+    public class Book //Eliminate this
+    {
+        public string Title { get; set; }
+        public string Description { get; set; }
+    }
+
     public enum ProjectType{
         Csharp,
         Python,
@@ -34,7 +41,7 @@ namespace pm.Helpers
         public SettingsModel GetInfoSettingsPmFile(string projectPath)
         {
             var files = Directory.GetFiles(projectPath);
-
+        
             foreach (var file in files)
             {   
                 var filename = Path.GetFileName(file);
@@ -52,7 +59,7 @@ namespace pm.Helpers
 
         public void GetCommandInfoByXmlFile(string projectPath, string nameCommand)
         {
-            var path = Directory.GetFiles($"{ projectPath }\\Commands");
+            var path = Directory.GetFiles(Path.Join(projectPath, ".pmt", "commands"));
 
             foreach (string command in path)
             {
@@ -101,6 +108,9 @@ namespace pm.Helpers
                             }
                         }
                     }   
+                }else
+                {
+                    MessagesHandler.Message("Pmt didn't find any external command with that name", MessageType.Normal);
                 }
             }
         }
@@ -138,19 +148,20 @@ namespace pm.Helpers
                 break;
             }
         }
-        
+
         private void CreateCommand(string commandName, string projectPath)
         {
-            var commandFolder = $@"{Settings.Location}\Commands";
+            var commandFolder = Path.Join(Settings.Location, ".pmt", "commands");
 
-            if (File.Exists(commandFolder))
-            {
-                System.Console.WriteLine("Exits");
-            }else
+            if (!File.Exists(commandFolder))
             {
                 Directory.CreateDirectory(commandFolder);
                 FileSystem.ChDir(commandFolder);
-                File.WriteAllText($"{commandName}.xml", "Write your commands here");
+
+                //Create the XML file
+                XmlSerializer serializer = new XmlSerializer(typeof(ExternalCommand));
+                var book = new ExternalCommand { Before = new Before{ run = "dotnet|test" } }; // create's the file structure
+                serializer.Serialize(File.Create($"{commandName}.xml"), book); // create's the final file
             }
         }
 
@@ -159,7 +170,7 @@ namespace pm.Helpers
             var template = Settings.GetTemplatePath();
             var root = Settings.GetValue<string>("ProjectPath");
 
-            if (!Directory.Exists($"{ root }/{ projectPath }"))
+            if (!Directory.Exists(Path.Join(root, projectPath)))
             { 
                 FileSystem.ChDir(root);
                 Directory.CreateDirectory(projectPath);
@@ -189,7 +200,7 @@ namespace pm.Helpers
             }
             else
             {
-                MessagesHandler.Message($"The project { projectPath } is already exists!", MessageType.Error);
+                MessagesHandler.Message($"The project { projectPath } already exists!", MessageType.Error);
             }
 
         }
@@ -198,10 +209,12 @@ namespace pm.Helpers
         {
             var directoryFolder = Path.GetDirectoryName(projectPath);
             var path = Settings.GetValue<string>("ProjectPath");
+            var current_editor = Settings.GetValue<string>("CurrentEditor");
+
 
             var redirectFile = $"{ Settings.PathToPmDirectory }/redirect.json";
 
-            if(File.Exists($"{ projectPath }/settings.pm.json"))
+            if(File.Exists(Path.Join(projectPath, ".pmt", "settings.pm.json")))
             {
                 MessagesHandler.Message("The Project is already initialize", MessageType.Normal);
             }
@@ -237,12 +250,16 @@ namespace pm.Helpers
                     }
                 }
 
-                using(StreamWriter setings = File.CreateText($"{ projectPath }/settings.pm.json"))
+                DirectoryInfo pmtFolder = new DirectoryInfo(Path.Join(projectPath, ".pmt"));
+                pmtFolder.Create(); // Creates the .pmt folder holder
+
+                using(StreamWriter settings_file = File.CreateText(Path.Join(projectPath, ".pmt", "settings.pm.json")))
                 {
                     var settings = new SettingsModel{
                         ProjectName = projectName,
-                        Description = "write the description of the project",
-                        Editor = "your editor..."
+                        Editor = current_editor,
+                        Description = "My project power by pmt",
+                        Scripts = new List<Script>()
                     };
 
                     var options = new JsonSerializerOptions{
@@ -250,7 +267,7 @@ namespace pm.Helpers
                     };
 
                     var json = JsonSerializer.Serialize(settings, options);
-                    setings.Write(json);
+                    settings_file.Write(json);
 
                     MessagesHandler.Message("The project was initialize!", MessageType.Information);
                 }
@@ -271,21 +288,26 @@ namespace pm.Helpers
             foreach (var dir in directories)
             {
                 //Read settings.pm.json file to have acess
-                var settings = GetInfoSettingsPmFile(dir);
-                var editor_of_project = GetTheProjectEditor(dir);
-
-                var project = new ProjectModel{
-                Title = Path.GetFileName(dir),
-                Path = dir,
-                Description = settings == null ? "This Project has no Description" : settings.Description,
-                Editor = editor_of_project.editor_name
-                };
-
-                var directoryInfo = new DirectoryInfo(project.Path);
-
-                if (!directoryInfo.Attributes.HasFlag(FileAttributes.Hidden))
+                var pmt_folder = Path.Join(dir, ".pmt");
+                
+                if (Directory.Exists(pmt_folder))
                 {
-                    list.Add(project);
+                    var settings = GetInfoSettingsPmFile(pmt_folder);
+                    var editor_of_project = GetTheProjectEditor(pmt_folder);
+
+                    var project = new ProjectModel{
+                    Title = Path.GetFileName(dir),
+                    Path = dir,
+                    Description = settings == null ? "This Project has no Description" : settings.Description,
+                    Editor = editor_of_project.editor_name
+                    };
+
+                    var directoryInfo = new DirectoryInfo(project.Path);
+
+                    if (!directoryInfo.Attributes.HasFlag(FileAttributes.Hidden))
+                    {
+                        list.Add(project);
+                    }
                 }
             }
 
@@ -489,41 +511,48 @@ namespace pm.Helpers
            
         public void RunProjectCommand(string command)
         {
-            var root = Settings.Location;
-            var settings = Settings.ReadProjectSettings(root);
+            var root = Path.Join(Settings.Location, ".pmt");
             
-            if (settings.Scripts != null)
+            if (Directory.Exists(root))
             {
-                var scripts = settings.Scripts.ToArray();
-
-                foreach (var script in scripts)
+                var settings = Settings.ReadProjectSettings(root);
+            
+                if (settings.Scripts != null)
                 {
-                    if(command == script.Name)
+                    var scripts = settings.Scripts.ToArray();
+
+                    foreach (var script in scripts)
                     {
-                        var words = script.Command.Split('|');
-
-                        try
-                        {   
-                            FileSystem.ChDir(root);
-
-                            Process process = new Process();
-                            process.StartInfo.FileName = words[0];
-                            process.StartInfo.Arguments = words[1];
-                            process.Start();
-                            process.WaitForExit();
-                            process.Kill();
-                        }
-                        catch (System.Exception)
+                        if(command == script.Name)
                         {
-                            MessagesHandler.Message("Something went wrong!", MessageType.Error);
+                            var words = script.Command.Split('|');
+
+                            try
+                            {   
+                                FileSystem.ChDir(root);
+
+                                Process process = new Process();
+                                process.StartInfo.FileName = words[0];
+                                process.StartInfo.Arguments = words[1];
+                                process.Start();
+                                process.WaitForExit();
+                                process.Kill();
+
+                                return;
+                            }
+                            catch (System.Exception)
+                            {
+                                MessagesHandler.Message("Something went wrong!", MessageType.Error);
+                            }
                         }
                     }
-                }
 
-                return;
+                    MessagesHandler.Message("Pm didn't find any script with that name", MessageType.Normal);
+                    return;
+                }
             }
 
-            MessagesHandler.Message("Pm didn't find any script with that name", MessageType.Normal);
+            MessagesHandler.Message("Something went wrong!", MessageType.Error);
         }
 
        #endregion
