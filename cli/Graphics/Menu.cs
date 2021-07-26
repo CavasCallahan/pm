@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using pm.Models;
 
 namespace ProjectManager.Graphics
 {
@@ -19,6 +18,7 @@ namespace ProjectManager.Graphics
         }
         private void DisplayOptions()
         {
+            int offset = 6;
             Console.WriteLine(Prompt);
 
             for (int i = 0; i < (Options.Length); i++)

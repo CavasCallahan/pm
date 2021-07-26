@@ -198,10 +198,12 @@ namespace pm.Helpers
         {
             var directoryFolder = Path.GetDirectoryName(projectPath);
             var path = Settings.GetValue<string>("ProjectPath");
+            var current_editor = Settings.GetValue<string>("CurrentEditor");
+
 
             var redirectFile = $"{ Settings.PathToPmDirectory }/redirect.json";
 
-            if(File.Exists($"{ projectPath }/settings.pm.json"))
+            if(File.Exists(Path.Join(projectPath, ".pmt", "settings.pm.json")))
             {
                 MessagesHandler.Message("The Project is already initialize", MessageType.Normal);
             }
@@ -237,12 +239,16 @@ namespace pm.Helpers
                     }
                 }
 
-                using(StreamWriter setings = File.CreateText($"{ projectPath }/settings.pm.json"))
+                DirectoryInfo pmtFolder = new DirectoryInfo(Path.Join(projectPath, ".pmt"));
+                pmtFolder.Create(); // Creates the .pmt folder holder
+
+                using(StreamWriter settings_file = File.CreateText(Path.Join(projectPath, ".pmt", "settings.pm.json")))
                 {
                     var settings = new SettingsModel{
                         ProjectName = projectName,
-                        Description = "write the description of the project",
-                        Editor = "your editor..."
+                        Editor = current_editor,
+                        Description = "My project power by pmt",
+                        Scripts = new List<Script>()
                     };
 
                     var options = new JsonSerializerOptions{
@@ -250,7 +256,7 @@ namespace pm.Helpers
                     };
 
                     var json = JsonSerializer.Serialize(settings, options);
-                    setings.Write(json);
+                    settings_file.Write(json);
 
                     MessagesHandler.Message("The project was initialize!", MessageType.Information);
                 }

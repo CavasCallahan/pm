@@ -20,6 +20,8 @@ namespace pm.Helpers
             get { return Path.Combine(GetValue<string>("ProjectPath"), ".pm"); }
         }
         
+        public string PmtProjectFolder { get; set; } = ".pmt";
+
         public string Location { get; set; }
 
         public void setValue(string currentEditor = null, object editorPath = null)
