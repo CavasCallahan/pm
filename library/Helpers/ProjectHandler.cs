@@ -41,7 +41,7 @@ namespace pm.Helpers
         public SettingsModel GetInfoSettingsPmFile(string projectPath)
         {
             var files = Directory.GetFiles(projectPath);
-
+        
             foreach (var file in files)
             {   
                 var filename = Path.GetFileName(file);
@@ -285,21 +285,26 @@ namespace pm.Helpers
             foreach (var dir in directories)
             {
                 //Read settings.pm.json file to have acess
-                var settings = GetInfoSettingsPmFile(dir);
-                var editor_of_project = GetTheProjectEditor(dir);
-
-                var project = new ProjectModel{
-                Title = Path.GetFileName(dir),
-                Path = dir,
-                Description = settings == null ? "This Project has no Description" : settings.Description,
-                Editor = editor_of_project.editor_name
-                };
-
-                var directoryInfo = new DirectoryInfo(project.Path);
-
-                if (!directoryInfo.Attributes.HasFlag(FileAttributes.Hidden))
+                var pmt_folder = Path.Join(dir, ".pmt");
+                
+                if (Directory.Exists(pmt_folder))
                 {
-                    list.Add(project);
+                    var settings = GetInfoSettingsPmFile(pmt_folder);
+                    var editor_of_project = GetTheProjectEditor(pmt_folder);
+
+                    var project = new ProjectModel{
+                    Title = Path.GetFileName(dir),
+                    Path = dir,
+                    Description = settings == null ? "This Project has no Description" : settings.Description,
+                    Editor = editor_of_project.editor_name
+                    };
+
+                    var directoryInfo = new DirectoryInfo(project.Path);
+
+                    if (!directoryInfo.Attributes.HasFlag(FileAttributes.Hidden))
+                    {
+                        list.Add(project);
+                    }
                 }
             }
 
