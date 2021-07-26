@@ -59,7 +59,7 @@ namespace pm.Helpers
 
         public void GetCommandInfoByXmlFile(string projectPath, string nameCommand)
         {
-            var path = Directory.GetFiles($"{ projectPath }\\Commands");
+            var path = Directory.GetFiles(Path.Join(projectPath, ".pmt", "commands"));
 
             foreach (string command in path)
             {
@@ -108,6 +108,9 @@ namespace pm.Helpers
                             }
                         }
                     }   
+                }else
+                {
+                    MessagesHandler.Message("Pmt didn't find any external command with that name", MessageType.Normal);
                 }
             }
         }
@@ -508,41 +511,48 @@ namespace pm.Helpers
            
         public void RunProjectCommand(string command)
         {
-            var root = Settings.Location;
-            var settings = Settings.ReadProjectSettings(root);
+            var root = Path.Join(Settings.Location, ".pmt");
             
-            if (settings.Scripts != null)
+            if (Directory.Exists(root))
             {
-                var scripts = settings.Scripts.ToArray();
-
-                foreach (var script in scripts)
+                var settings = Settings.ReadProjectSettings(root);
+            
+                if (settings.Scripts != null)
                 {
-                    if(command == script.Name)
+                    var scripts = settings.Scripts.ToArray();
+
+                    foreach (var script in scripts)
                     {
-                        var words = script.Command.Split('|');
-
-                        try
-                        {   
-                            FileSystem.ChDir(root);
-
-                            Process process = new Process();
-                            process.StartInfo.FileName = words[0];
-                            process.StartInfo.Arguments = words[1];
-                            process.Start();
-                            process.WaitForExit();
-                            process.Kill();
-                        }
-                        catch (System.Exception)
+                        if(command == script.Name)
                         {
-                            MessagesHandler.Message("Something went wrong!", MessageType.Error);
+                            var words = script.Command.Split('|');
+
+                            try
+                            {   
+                                FileSystem.ChDir(root);
+
+                                Process process = new Process();
+                                process.StartInfo.FileName = words[0];
+                                process.StartInfo.Arguments = words[1];
+                                process.Start();
+                                process.WaitForExit();
+                                process.Kill();
+
+                                return;
+                            }
+                            catch (System.Exception)
+                            {
+                                MessagesHandler.Message("Something went wrong!", MessageType.Error);
+                            }
                         }
                     }
-                }
 
-                return;
+                    MessagesHandler.Message("Pm didn't find any script with that name", MessageType.Normal);
+                    return;
+                }
             }
 
-            MessagesHandler.Message("Pm didn't find any script with that name", MessageType.Normal);
+            MessagesHandler.Message("Something went wrong!", MessageType.Error);
         }
 
        #endregion

@@ -10,7 +10,7 @@ namespace ProjectManager.Commands
             bool shouldUseComplex = false;
 
             Options = new OptionSet{
-                { "c|complex" , "This switch allow you to use complex commands", c => shouldUseComplex = c != null}
+                { "e|external" , "This switch allow you to use external commands", e => shouldUseComplex = e != null}
             };
 
             Run = arg => { 
