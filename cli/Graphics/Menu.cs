@@ -18,7 +18,6 @@ namespace ProjectManager.Graphics
         }
         private void DisplayOptions()
         {
-            int offset = 6;
             Console.WriteLine(Prompt);
 
             for (int i = 0; i < (Options.Length); i++)
