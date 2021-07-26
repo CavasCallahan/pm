@@ -7,9 +7,16 @@ using pm.Models;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace pm.Helpers
 {
+    public class Book //Eliminate this
+    {
+        public string Title { get; set; }
+        public string Description { get; set; }
+    }
+
     public enum ProjectType{
         Csharp,
         Python,
@@ -138,19 +145,20 @@ namespace pm.Helpers
                 break;
             }
         }
-        
+
         private void CreateCommand(string commandName, string projectPath)
         {
-            var commandFolder = $@"{Settings.Location}\Commands";
+            var commandFolder = Path.Join(Settings.Location, ".pmt", "commands");
 
-            if (File.Exists(commandFolder))
-            {
-                System.Console.WriteLine("Exits");
-            }else
+            if (!File.Exists(commandFolder))
             {
                 Directory.CreateDirectory(commandFolder);
                 FileSystem.ChDir(commandFolder);
-                File.WriteAllText($"{commandName}.xml", "Write your commands here");
+
+                //Create the XML file
+                XmlSerializer serializer = new XmlSerializer(typeof(ExternalCommand));
+                var book = new ExternalCommand { Before = new Before{ run = "dotnet|test" } }; // create's the file structure
+                serializer.Serialize(File.Create($"{commandName}.xml"), book); // create's the final file
             }
         }
 
@@ -159,7 +167,7 @@ namespace pm.Helpers
             var template = Settings.GetTemplatePath();
             var root = Settings.GetValue<string>("ProjectPath");
 
-            if (!Directory.Exists($"{ root }/{ projectPath }"))
+            if (!Directory.Exists(Path.Join(root, projectPath)))
             { 
                 FileSystem.ChDir(root);
                 Directory.CreateDirectory(projectPath);
@@ -189,7 +197,7 @@ namespace pm.Helpers
             }
             else
             {
-                MessagesHandler.Message($"The project { projectPath } is already exists!", MessageType.Error);
+                MessagesHandler.Message($"The project { projectPath } already exists!", MessageType.Error);
             }
 
         }
